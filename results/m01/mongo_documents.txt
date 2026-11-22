@@ -1,0 +1,18 @@
+[
+  {
+    principal: 500000,
+    rate: 12,
+    months: 24,
+    emi: 23536.74,
+    servedBy: 'Hibas-MacBook-Pro.local',
+    createdAt: ISODate('2026-11-22T08:43:34.332Z')
+  },
+  {
+    principal: 500000,
+    rate: 12,
+    months: 24,
+    emi: 23536.74,
+    servedBy: 'Hibas-MacBook-Pro.local',
+    createdAt: ISODate('2026-11-22T08:43:19.459Z')
+  }
+]

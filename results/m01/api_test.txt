@@ -1,0 +1,4 @@
+{"status":"ok","servedBy":"Hibas-MacBook-Pro.local"}
+{"principal":500000,"rate":12,"months":24,"emi":23536.74,"totalPayment":564881.67,"totalInterest":64881.67,"servedBy":"Hibas-MacBook-Pro.local","podIp":"192.168.100.87","version":"1.0"}
+{"errors":["principal must be a positive number"]}
+[{"principal":500000,"rate":12,"months":24,"emi":23536.74,"servedBy":"Hibas-MacBook-Pro.local","createdAt":"2026-11-22T08:43:34.332Z"},{"principal":500000,"rate":12,"months":24,"emi":23536.74,"servedBy":"Hibas-MacBook-Pro.local","createdAt":"2026-11-22T08:43:19.459Z"}]
