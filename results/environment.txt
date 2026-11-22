@@ -1,0 +1,13 @@
+Sun Nov 22 10:46:12 +03 2026
+ProductName:		macOS
+ProductVersion:		15.8.3
+BuildVersion:		24H241
+arm64
+cores: 8
+ram GB: 16
+docker 29.9.3
+Client Version: v1.37.2
+Kustomize Version: v5.8.1
+minikube version: v1.39.0
+commit: 7a9f6a841470a207de8cf4bafcccee0969d8ba10
+v26.13.1

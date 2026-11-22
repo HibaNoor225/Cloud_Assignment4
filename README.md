@@ -4,7 +4,7 @@ DS-584 Cloud Computing, Fall 2026, Assignment 4: *Deploying, Load Balancing and 
 
 A Loan EMI calculator (Node.js/Express, HTML, Bootstrap, jQuery) that stores every calculation in MongoDB. It runs on a single-node Minikube cluster as a 3-replica Deployment behind a ClusterIP Service and an NGINX Ingress (`http://emi.local`), with MongoDB as a 3-member replica set (StatefulSet with persistent volumes) and a HorizontalPodAutoscaler (1–5 pods at 50% CPU).
 
-> **Step-by-step guides from zero (setup on macOS or Ubuntu, each milestone, deliverables):** start at [docs/00-MASTER-PLAN.md](docs/00-MASTER-PLAN.md).
+> **Step-by-step guides from zero (setup on macOS, each milestone, deliverables):** start at [docs/00-MASTER-PLAN.md](docs/00-MASTER-PLAN.md).
 
 ## Repository layout
 
@@ -64,10 +64,12 @@ kubectl rollout status deployment/emi-web -n emi
 kubectl get all,pvc,configmap -n emi -o wide
 
 # 5. Reach it through the Ingress
-echo "$(minikube ip) emi.local" | sudo tee -a /etc/hosts
+# macOS / Windows (Docker driver): map emi.local to 127.0.0.1 and keep a tunnel running
+echo "127.0.0.1 emi.local" | sudo tee -a /etc/hosts
+minikube tunnel -p emi          # in a separate terminal, leave it open
+# Linux instead: echo "$(minikube ip) emi.local" | sudo tee -a /etc/hosts
 curl http://emi.local/health
 # browser: http://emi.local
-#   (on Windows/macOS with the Docker driver run `minikube tunnel` and map emi.local to 127.0.0.1)
 
 # Quick check without Ingress
 kubectl port-forward svc/emi-web 8080:80 -n emi     # http://localhost:8080
@@ -94,7 +96,7 @@ kubectl get hpa emi-web -n emi
 | `scripts/monitor.py` | `kubectl top pods` every 15 s, host CPU every 1 s, optional HPA every 15 s, to CSV |
 | `scripts/make_graphs.py` | Graphs 1–3 into `results/graphs/` |
 
-Load-test tools: Ubuntu `sudo apt install -y httperf python3-matplotlib`; macOS `brew install httperf` and `pip install matplotlib psutil` in a virtual environment.
+Load-test tools (macOS): `brew install httperf`, then `python3 -m venv .venv && source .venv/bin/activate && pip install matplotlib psutil`.
 
 ## Tear down
 

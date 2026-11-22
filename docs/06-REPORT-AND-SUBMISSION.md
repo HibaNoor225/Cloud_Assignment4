@@ -13,8 +13,8 @@ Tick each item as you collect it. The "Source" column says where it comes from.
 
 | ✓ | Deliverable | Source |
 |---|---|---|
-| [ ] | Screenshot of UI: P=500000, rate=12%, n=24 (EMI 23,536.74) **with history table** | `m01_ui_500000_12_24.png` |
-| [ ] | Git repository link (source code) | your repo URL |
+| [ ] | Screenshot of UI: P=500000, rate=12%, n=24 (EMI 23,536.74) **with history table** | `results/screenshots/m01_ui_500000_12_24.png` |
+| [ ] | Git repository link (source code) | `https://github.com/HibaNoor225/Cloud_Assignment4` |
 
 ### Milestone 02 — MongoDB + web app on Minikube
 
@@ -25,7 +25,7 @@ Tick each item as you collect it. The "Source" column says where it comes from.
 | [ ] | `kubectl get all,pvc,configmap -n emi -o wide`, all pods Running & Ready | `results/m02/get_all.txt` |
 | [ ] | `rs.status()` trimmed to names + states (1 PRIMARY, 2 SECONDARY) | `results/m02/rs_status.txt` |
 | [ ] | `kubectl logs job/mongo-init -n emi` | `results/m02/mongo_init_job.log` |
-| [ ] | Screenshot of app via port-forward with history table | `m02_portforward_app.png` |
+| [ ] | Screenshot of app via port-forward with history table | `results/screenshots/m02_portforward_app.png` |
 | [ ] | Persistence test: pod age, PVC name, documents before/after | `results/m02/persistence_test.txt` |
 
 ### Milestone 03 — Ingress, load balancing, self-healing
@@ -33,7 +33,7 @@ Tick each item as you collect it. The "Source" column says where it comes from.
 | ✓ | Deliverable | Source |
 |---|---|---|
 | [ ] | Ingress manifest | `k8s/07-ingress.yaml` |
-| [ ] | Screenshot of app at `http://emi.local` | `m03_emi_local.png` |
+| [ ] | Screenshot of app at `http://emi.local` | `results/screenshots/m03_emi_local.png` |
 | [ ] | Requests-per-pod table, 3 replicas | `results/m03/distribution_3_replicas.txt` |
 | [ ] | Requests-per-pod table, 5 replicas (+ proof new pods only get traffic once Ready) | `results/m03/distribution_5_replicas.txt`, `distribution_5_replicas_during_scaleup.txt`, `scale_watch.txt` |
 | [ ] | `kubectl get pods -w` during web-pod deletion | `results/m03/selfheal_web_watch.txt` (+ `selfheal_web_loop.log`) |
@@ -70,12 +70,14 @@ Paste terminal outputs as text in a monospace font (Consolas / Courier New, 9 pt
 DS-584 Cloud Computing — Assignment 4
 Deploying, Load Balancing and Autoscaling a Web Application with MongoDB on Kubernetes
 Name: ____________   Roll No: ____________   Date: ____________
-Git repository: https://______________________
+Git repository: https://github.com/HibaNoor225/Cloud_Assignment4
 
 0. Environment
-   - Ubuntu version, CPU cores, RAM (from results/environment.txt)
-   - Minikube profile "emi" started with --cpus=_ --memory=_ ; Kubernetes version
-   - Accessed over SSH from <Windows/Mac> PC; browser via SSH tunnel
+   - Mac model / chip (Apple Silicon or Intel), macOS version, CPU cores, RAM
+     (from results/environment.txt)
+   - Docker Desktop resources (CPUs / memory); Minikube profile "emi",
+     --driver=docker --cpus=_ --memory=_ ; Kubernetes version (kubectl version)
+   - Ingress reached through minikube tunnel + /etc/hosts 127.0.0.1 emi.local
 
 1. Milestone 01 — Loan EMI Calculator
    1.1 Design: Node.js/Express + HTML/Bootstrap/jQuery; endpoints table
@@ -124,7 +126,7 @@ Appendix B — Scripts list (scripts/*) with one-line description each
 
 ## 5.3 Final push and submission
 
-**Run on: UBUNTU SERVER (inside SSH)**
+**Mac Terminal:**
 
 ```bash
 cd ~/assignment4
@@ -137,9 +139,9 @@ git log --oneline | head
 
 Then:
 
-1. Open your repository in a browser and check `results/graphs/` and `README.md` are there.
-2. Export the report as PDF (File > Download > PDF in Google Docs, or Save As > PDF in Word).
-3. On Google Classroom, upload the PDF and paste the repository link, then click **Turn in**.
+1. Open [github.com/HibaNoor225/Cloud_Assignment4](https://github.com/HibaNoor225/Cloud_Assignment4) and check that `results/graphs/`, `results/screenshots/` and `README.md` are there. If the repo is private, add your instructor as a collaborator (Settings > Collaborators).
+2. Export the report as PDF (File > Download > PDF in Google Docs; File > Save As > PDF in Word; File > Export as PDF in Pages).
+3. On Google Classroom, upload the PDF, paste the repository link, and click **Turn in**.
 
 ## 5.4 Clean up (after grading only)
 
@@ -148,4 +150,4 @@ minikube stop -p emi          # stop the cluster (keeps everything)
 minikube delete -p emi        # delete it completely (only when you're sure)
 ```
 
-Your Assignment 3 cluster (`minikube` profile) was never touched.
+Stopping Docker Desktop afterwards frees the memory it reserved.

@@ -1,10 +1,10 @@
 # results/
 
-Raw outputs of every experiment. Filled in on the Ubuntu server while following the guides in `docs/`.
+Raw outputs of every experiment. Filled in on the Mac while following the guides in `docs/`.
 
 | Folder | Contents |
 |---|---|
-| `environment.txt` | Server and tool versions (setup step 0.12) |
+| `environment.txt` | Mac and tool versions (setup step M0.8) |
 | `m01/` | Local API test output |
 | `m02/` | Image check, `get_all.txt`, `rs_status.txt`, `mongo_init_job.log`, `persistence_test.txt` |
 | `m03/` | Load distribution tables, watch logs, self-healing and rolling-update logs |
