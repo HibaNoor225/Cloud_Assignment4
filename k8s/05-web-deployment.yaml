@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: emi-web
+  namespace: emi
+  labels:
+    app: emi-web
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: emi-web
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      # Never drop below the desired count during an update, so no request fails.
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: emi-web
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: web
+          image: emi-web:1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 3000
+          env:
+            - name: MONGO_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: emi-config
+                  key: MONGO_URL
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 3
+            periodSeconds: 5
+            timeoutSeconds: 4
+            failureThreshold: 2
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 4
+            # Generous so a short MongoDB election does not restart every web pod.
+            failureThreshold: 6
+          lifecycle:
+            preStop:
+              # Lets the Service/Ingress stop routing to this pod before it shuts down.
+              exec:
+                command: ["sleep", "5"]

@@ -1,0 +1,19 @@
+# Headless Service: gives each StatefulSet pod a stable DNS name
+# (mongo-0.mongo, mongo-1.mongo, mongo-2.mongo) instead of one load-balanced IP.
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo
+  namespace: emi
+  labels:
+    app: mongo
+spec:
+  clusterIP: None
+  # Members must resolve each other before they are Ready, otherwise rs.initiate() cannot reach them.
+  publishNotReadyAddresses: true
+  selector:
+    app: mongo
+  ports:
+    - name: mongo
+      port: 27017
+      targetPort: 27017

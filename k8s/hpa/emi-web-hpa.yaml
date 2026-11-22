@@ -1,0 +1,26 @@
+# Kept out of k8s/ on purpose: Milestones 02-03 and the fixed-replica runs of
+# Milestone 04 scale emi-web by hand, and an active HPA would override that.
+# Apply only for the autoscaling test: kubectl apply -f k8s/hpa/
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: emi-web
+  namespace: emi
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: emi-web
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 50
+  behavior:
+    scaleDown:
+      # Default is 300s; 60s lets scale-down show up inside the 3-minute cool-down phase.
+      stabilizationWindowSeconds: 60
