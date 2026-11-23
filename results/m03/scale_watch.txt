@@ -1,0 +1,17 @@
+12:40:21 NAME                       READY   STATUS    RESTARTS   AGE
+12:40:21 emi-web-6859469dcb-d87g4   1/1     Running   0          41m
+12:40:21 emi-web-6859469dcb-wf6ct   1/1     Running   0          41m
+12:40:21 emi-web-6859469dcb-zf279   1/1     Running   0          41m
+12:40:33 emi-web-6859469dcb-87dlz   0/1     Pending   0          0s
+12:40:33 emi-web-6859469dcb-vn6fq   0/1     Pending   0          0s
+12:40:33 emi-web-6859469dcb-87dlz   0/1     Pending   0          0s
+12:40:33 emi-web-6859469dcb-vn6fq   0/1     Pending   0          0s
+12:40:33 emi-web-6859469dcb-87dlz   0/1     ContainerCreating   0          0s
+12:40:33 emi-web-6859469dcb-vn6fq   0/1     ContainerCreating   0          0s
+12:40:33 emi-web-6859469dcb-vn6fq   0/1     ContainerCreating   0          0s
+12:40:33 emi-web-6859469dcb-87dlz   0/1     ContainerCreating   0          0s
+12:40:33 emi-web-6859469dcb-vn6fq   0/1     Running             0          0s
+12:40:33 emi-web-6859469dcb-87dlz   0/1     Running             0          0s
+12:40:39 emi-web-6859469dcb-87dlz   1/1     Running             0          6s
+12:40:39 emi-web-6859469dcb-87dlz   1/1     Running             0          6s
+12:40:39 emi-web-6859469dcb-vn6fq   1/1     Running             0          6s

@@ -80,6 +80,22 @@ curl -s -X POST http://emi.local/api/emi -H 'Content-Type: application/json' -d 
 
 `/health` returns `{"status":"ok"...}` and the POST returns an EMI result.
 
+**4. Check the speed** (important on macOS):
+
+```bash
+time curl -s -o /dev/null -w 'HTTP %{http_code}\n' http://emi.local/health
+```
+
+`real` must be well under 1 second. If it's about **5 seconds**, macOS is first looking up the `.local` name on the local network (Bonjour) before reading the hosts file. That makes the request loop and the load tests time out. Fix it once:
+
+```bash
+echo "::1 emi.local" | sudo tee -a /etc/hosts
+sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder
+time curl -s -o /dev/null -w 'HTTP %{http_code}\n' http://emi.local/health
+```
+
+If it prints `HTTP 000`, the tunnel in window T isn't running; start `minikube tunnel -p emi` again.
+
 ## Step 3.3 — Screenshot at http://emi.local (deliverable)
 
 1. In the browser, open **http://emi.local**.
@@ -166,10 +182,12 @@ scripts/request_loop.sh results/m03/selfheal_web_loop.log
 
 ```bash
 kubectl get pods -n emi -l app=emi-web
-kubectl delete pod <one-emi-web-pod-name> -n emi
+POD=$(kubectl get pods -n emi -l app=emi-web -o jsonpath='{.items[0].metadata.name}')
+echo "Deleting $POD"
+kubectl delete pod "$POD" -n emi
 ```
 
-(Copy a full pod name from the list, e.g. `emi-web-7c9d8f6b5-abcde`.)
+(The second line picks the first web pod's name automatically, so you don't type it.)
 
 In window A, the deleted pod goes `Terminating` and a **new** pod (new random suffix) appears and becomes `1/1 Running`. The Deployment keeps 3 replicas.
 
@@ -198,10 +216,12 @@ kubectl get pods -n emi -l app=mongo -w | ts | tee results/m03/selfheal_mongo_wa
 scripts/request_loop.sh results/m03/selfheal_mongo_loop.log
 ```
 
-**Window C** (delete the PRIMARY; use the pod name printed by `mongo_primary.sh`, e.g. `mongo-0`):
+**Window C** (delete the PRIMARY; the first line reads its pod name from `mongo_primary.sh`):
 
 ```bash
-kubectl delete pod mongo-0 -n emi
+PRIMARY=$(scripts/mongo_primary.sh | awk '/PRIMARY pod:/{print $3}')
+echo "Deleting PRIMARY $PRIMARY"
+kubectl delete pod "$PRIMARY" -n emi
 sleep 30
 scripts/mongo_primary.sh | tee results/m03/mongo_after.txt
 scripts/count_documents.sh | tee -a results/m03/mongo_after.txt

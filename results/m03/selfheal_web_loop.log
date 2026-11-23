@@ -1,0 +1,9 @@
+12:54:47 #1 FAIL http=000 version=- pod=-
+12:54:52 #2 FAIL http=000 version=- pod=-
+12:54:57 #3 FAIL http=000 version=- pod=-
+12:55:03 #4 FAIL http=000 version=- pod=-
+12:55:08 #5 FAIL http=000 version=- pod=-
+12:55:13 #6 FAIL http=000 version=- pod=-
+12:55:18 #7 FAIL http=000 version=- pod=-
+
+SUMMARY: total=8 ok=0 failed=7

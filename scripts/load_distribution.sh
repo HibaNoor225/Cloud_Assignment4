@@ -11,13 +11,18 @@ URL="${URL:-http://emi.local}"
 mkdir -p "$(dirname "$OUT")" 2>/dev/null || true
 tmp="$(mktemp)"
 
+# Resolve once (macOS *.local lookups can stall ~5 s each).
+HOST=$(echo "$URL" | sed -E 's#^https?://([^/:]+).*#\1#')
+IP=$(python3 -c 'import socket, sys; print(socket.gethostbyname(sys.argv[1]))' "$HOST" 2>/dev/null || true)
+RESOLVE="${IP:+$HOST:80:$IP}"
+
 for i in $(seq 1 "$N"); do
   p=$(( (RANDOM % 900 + 100) * 1000 ))
   r=$(( RANDOM % 20 + 1 ))
   m=$(( RANDOM % 60 + 6 ))
-  body=$(curl -s -m 10 -X POST "$URL/api/emi" \
+  body=$(curl -s -m 10 ${RESOLVE:+--resolve "$RESOLVE"} -X POST "$URL/api/emi" \
     -H 'Content-Type: application/json' \
-    -d "{\"principal\":$p,\"rate\":$r,\"months\":$m}")
+    -d "{\"principal\":$p,\"rate\":$r,\"months\":$m}" || true)
   pod=$(echo "$body" | sed -n 's/.*"servedBy":"\([^"]*\)".*/\1/p')
   echo "$(date '+%T') request $i -> ${pod:-FAILED}" | tee -a "$tmp" >&2
 done

@@ -1,0 +1,40 @@
+Requests per pod (30 requests to http://emi.local/api/emi at 2026-11-23 12:46:36):
+
+POD                                      REQUESTS
+emi-web-6859469dcb-zf279                 7
+emi-web-6859469dcb-d87g4                 7
+emi-web-6859469dcb-vn6fq                 6
+emi-web-6859469dcb-wf6ct                 5
+emi-web-6859469dcb-87dlz                 5
+
+Raw log:
+12:44:10 request 1 -> emi-web-6859469dcb-vn6fq
+12:44:15 request 2 -> emi-web-6859469dcb-87dlz
+12:44:20 request 3 -> emi-web-6859469dcb-zf279
+12:44:25 request 4 -> emi-web-6859469dcb-wf6ct
+12:44:30 request 5 -> emi-web-6859469dcb-87dlz
+12:44:35 request 6 -> emi-web-6859469dcb-zf279
+12:44:40 request 7 -> emi-web-6859469dcb-zf279
+12:44:45 request 8 -> emi-web-6859469dcb-d87g4
+12:44:50 request 9 -> emi-web-6859469dcb-wf6ct
+12:44:55 request 10 -> emi-web-6859469dcb-zf279
+12:45:00 request 11 -> emi-web-6859469dcb-d87g4
+12:45:06 request 12 -> emi-web-6859469dcb-vn6fq
+12:45:11 request 13 -> emi-web-6859469dcb-vn6fq
+12:45:16 request 14 -> emi-web-6859469dcb-vn6fq
+12:45:21 request 15 -> emi-web-6859469dcb-87dlz
+12:45:26 request 16 -> emi-web-6859469dcb-87dlz
+12:45:31 request 17 -> emi-web-6859469dcb-d87g4
+12:45:36 request 18 -> emi-web-6859469dcb-wf6ct
+12:45:41 request 19 -> emi-web-6859469dcb-vn6fq
+12:45:46 request 20 -> emi-web-6859469dcb-zf279
+12:45:51 request 21 -> emi-web-6859469dcb-d87g4
+12:45:56 request 22 -> emi-web-6859469dcb-87dlz
+12:46:01 request 23 -> emi-web-6859469dcb-zf279
+12:46:06 request 24 -> emi-web-6859469dcb-d87g4
+12:46:11 request 25 -> emi-web-6859469dcb-zf279
+12:46:16 request 26 -> emi-web-6859469dcb-d87g4
+12:46:21 request 27 -> emi-web-6859469dcb-wf6ct
+12:46:26 request 28 -> emi-web-6859469dcb-wf6ct
+12:46:31 request 29 -> emi-web-6859469dcb-vn6fq
+12:46:36 request 30 -> emi-web-6859469dcb-d87g4
