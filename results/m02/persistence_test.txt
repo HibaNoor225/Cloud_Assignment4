@@ -1,0 +1,50 @@
+=== Persistence test 2026-11-23 12:11:40 ===
+
+--- BEFORE: pods ---
+NAME      READY   STATUS    RESTARTS   AGE   IP            NODE   NOMINATED NODE   READINESS GATES
+mongo-0   1/1     Running   0          17m   10.244.0.7    emi    <none>           <none>
+mongo-1   1/1     Running   0          15m   10.244.0.9    emi    <none>           <none>
+mongo-2   1/1     Running   0          15m   10.244.0.10   emi    <none>           <none>
+
+--- BEFORE: PVCs ---
+NAME           STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+data-mongo-0   Bound    pvc-f68494c0-0e8b-4ce0-a747-c1277b522ace   1Gi        RWO            standard       <unset>                 17m
+data-mongo-1   Bound    pvc-90ce8152-45c2-451c-9a3b-a2ac9d0b85a4   1Gi        RWO            standard       <unset>                 15m
+data-mongo-2   Bound    pvc-45913413-d1a1-41c6-932b-6d778cfbd3e5   1Gi        RWO            standard       <unset>                 15m
+
+--- BEFORE: mongo-1 PVC and UID ---
+pod uid=76572642-00d0-4fec-8c2b-c4c0d48a8c82  pvc=data-mongo-1
+
+--- BEFORE: documents in calculations ---
+4
+
+--- kubectl delete pod mongo-1 ---
+pod "mongo-1" deleted from emi namespace
+
+--- Waiting for mongo-1 to be Ready again ---
+pod/mongo-1 condition met
+
+--- AFTER: pods (note the young AGE of mongo-1) ---
+NAME      READY   STATUS    RESTARTS   AGE   IP            NODE   NOMINATED NODE   READINESS GATES
+mongo-0   1/1     Running   0          18m   10.244.0.7    emi    <none>           <none>
+mongo-1   1/1     Running   0          11s   10.244.0.14   emi    <none>           <none>
+mongo-2   1/1     Running   0          16m   10.244.0.10   emi    <none>           <none>
+
+--- AFTER: PVCs (same names, still Bound) ---
+NAME           STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+data-mongo-0   Bound    pvc-f68494c0-0e8b-4ce0-a747-c1277b522ace   1Gi        RWO            standard       <unset>                 18m
+data-mongo-1   Bound    pvc-90ce8152-45c2-451c-9a3b-a2ac9d0b85a4   1Gi        RWO            standard       <unset>                 16m
+data-mongo-2   Bound    pvc-45913413-d1a1-41c6-932b-6d778cfbd3e5   1Gi        RWO            standard       <unset>                 16m
+
+--- AFTER: mongo-1 PVC and UID (new UID, same PVC) ---
+pod uid=18427317-02bc-4d19-8dc3-734b320d2838  pvc=data-mongo-1
+
+--- AFTER: documents in calculations ---
+4
+
+--- Replica set after recovery ---
+mongo-0.mongo:27017  PRIMARY
+mongo-1.mongo:27017  SECONDARY
+mongo-2.mongo:27017  SECONDARY
+
+PRIMARY pod: mongo-0

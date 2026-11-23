@@ -1,0 +1,6 @@
+IMAGE         ID             DISK USAGE   CONTENT SIZE   EXTRA
+emi-web:1.0   ef33474fd2e0        210MB         51.3MB        
+
+node
+
+docker.io/library/emi-web:1.0

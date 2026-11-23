@@ -1,0 +1,15 @@
+Waiting for mongo-0.mongo:27017 ...
+mongo-0.mongo is up
+Waiting for mongo-1.mongo:27017 ...
+mongo-1.mongo is up
+Waiting for mongo-2.mongo:27017 ...
+mongo-2.mongo is up
+Running rs.initiate() on mongo-0.mongo
+{
+  ok: 1
+}
+Waiting for a PRIMARY to be elected ...
+rs.status() members:
+mongo-0.mongo:27017  PRIMARY
+mongo-1.mongo:27017  SECONDARY
+mongo-2.mongo:27017  SECONDARY
