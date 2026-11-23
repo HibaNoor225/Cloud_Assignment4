@@ -1,0 +1,16 @@
+13:05:59 NAME      READY   STATUS    RESTARTS   AGE
+13:05:59 mongo-0   1/1     Running   0          71m
+13:05:59 mongo-1   1/1     Running   0          54m
+13:05:59 mongo-2   1/1     Running   0          69m
+13:06:32 mongo-0   1/1     Terminating   0          72m
+13:06:32 mongo-0   1/1     Terminating   0          72m
+13:06:48 mongo-0   0/1     Completed     0          72m
+13:06:48 mongo-0   0/1     Completed     0          72m
+13:06:48 mongo-0   0/1     Completed     0          72m
+13:06:48 mongo-0   0/1     Pending       0          0s
+13:06:48 mongo-0   0/1     Pending       0          0s
+13:06:48 mongo-0   0/1     ContainerCreating   0          0s
+13:06:49 mongo-0   0/1     ContainerCreating   0          1s
+13:06:49 mongo-0   0/1     Running             0          1s
+13:06:59 mongo-0   1/1     Running             0          11s
+13:06:59 mongo-0   1/1     Running             0          11s
