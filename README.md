@@ -1,5 +1,6 @@
 # Loan EMI Calculator with MongoDB on Kubernetes (Minikube)
 
+<<<<<<< HEAD
 **DS-584 Cloud Computing, Fall 2026, Assignment 4:** *Deploying, Load Balancing and Autoscaling a Web Application with MongoDB on Kubernetes (Minikube).*
 FCIT, University of the Punjab. Instructor: Dr. Numan Shafi.
 
@@ -101,6 +102,11 @@ Only the Ingress is reachable from the host. The Service spreads requests over t
 | Graphs 1–3 | `scripts/make_graphs.py` writes `results/graphs/*.png` |
 
 ---
+=======
+A Loan EMI calculator (Node.js/Express, HTML, Bootstrap, jQuery) that stores every calculation in MongoDB. It runs on a single-node Minikube cluster as a 3-replica Deployment behind a ClusterIP Service and an NGINX Ingress (`http://emi.local`), with MongoDB as a 3-member replica set (StatefulSet with persistent volumes) and a HorizontalPodAutoscaler (1–5 pods at 50% CPU).
+
+> **Step-by-step guides from zero (setup on macOS, each milestone, deliverables):**
+>>>>>>> 7ae626abfa56d54bd6409c130c6079c04a8fbf0f
 
 ## Repository layout
 
