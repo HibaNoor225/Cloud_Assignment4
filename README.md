@@ -67,7 +67,7 @@ echo "127.0.0.1 emi.local" | sudo tee -a /etc/hosts
 minikube tunnel -p emi
 ```
 
-Then open http://emi.local in the browser. On Linux, use `minikube ip` instead of 127.0.0.1, and the tunnel is not needed.
+Then open http://emi.local in the browser.
 
 ---
 
