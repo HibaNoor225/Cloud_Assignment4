@@ -1,6 +1,6 @@
 # Cloud Computing Assignment 4 - Loan EMI Calculator on Kubernetes
 
-D
+
 
 This project is a Loan EMI calculator that saves every calculation in MongoDB. It is deployed on a single-node Minikube cluster. The web app runs as a Deployment behind a Service and an NGINX Ingress, MongoDB runs as a 3-member replica set in a StatefulSet, and a Horizontal Pod Autoscaler scales the web pods under load.
 
@@ -109,7 +109,7 @@ MONGO_URL="mongodb://localhost:27017/emidb" node server.js
 
 Then open http://localhost:3000. For P = 500000, rate = 12% and n = 24 the EMI is 23,536.74.
 
-Screenshot: `results/screenshots/m01_ui_500000_12_24.png`
+Screenshot: `results/screenshots/M1_Screenshot.png`
 
 ---
 
@@ -221,15 +221,7 @@ CPU in the graphs is shown as a percentage of the pod's CPU request (100m), the 
 
 ---
 
-## Report
 
-The PDF report is generated from the files in `results/`:
-
-```bash
-python3 scripts/build_report.py --name "Hiba Noor" --roll "ROLL NO"
-```
-
-It creates `report/Assignment4_Report.pdf` (and an HTML version).
 
 ## Cleaning up
 
