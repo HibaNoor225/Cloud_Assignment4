@@ -1,6 +1,6 @@
 # Cloud Computing Assignment 4 - Loan EMI Calculator on Kubernetes
 
-DS-584 Cloud Computing, Fall 2026 (FCIT, University of the Punjab)
+D
 
 This project is a Loan EMI calculator that saves every calculation in MongoDB. It is deployed on a single-node Minikube cluster. The web app runs as a Deployment behind a Service and an NGINX Ingress, MongoDB runs as a 3-member replica set in a StatefulSet, and a Horizontal Pod Autoscaler scales the web pods under load.
 
