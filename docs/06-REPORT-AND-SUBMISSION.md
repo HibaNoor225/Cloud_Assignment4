@@ -62,7 +62,22 @@ Tick each item as you collect it. The "Source" column says where it comes from.
 
 ---
 
-## 5.2 Report template (copy into Word / Google Docs, export as PDF)
+## 5.2 Generate the report automatically (recommended)
+
+The script reads everything in `results/` and writes the complete report: all sections, explanations, the table of 15 runs, graphs, screenshots, outputs, a discussion based on your own numbers, and the YAML appendix.
+
+```bash
+cd ~/assignment4 && source .venv/bin/activate
+python3 scripts/make_graphs.py
+python3 scripts/build_report.py --name "Your Name" --roll "Your Roll No"
+open report/Assignment4_Report.html
+```
+
+- If Google Chrome is installed, it also writes `report/Assignment4_Report.pdf`. Otherwise, in Safari use **File > Export as PDF...**.
+- At the end, the script lists anything still missing (also in `report/MISSING.txt`). In the report, each missing item is a red dashed box. Add the file under the name shown, then run `build_report.py` again.
+- If your screenshot has a different name, rename it to the one the script asks for, e.g. `mv ~/Desktop/Screenshot_2.png results/screenshots/m03_version_1_1.png`.
+
+## 5.3 Report template (manual alternative: copy into Word / Google Docs, export as PDF)
 
 Paste terminal outputs as text in a monospace font (Consolas / Courier New, 9 pt). Long outputs can be trimmed, but keep the lines that prove the point.
 
@@ -124,7 +139,7 @@ Appendix A — All YAML manifests
 Appendix B — Scripts list (scripts/*) with one-line description each
 ```
 
-## 5.3 Final push and submission
+## 5.4 Final push and submission
 
 **Mac Terminal:**
 
@@ -143,7 +158,7 @@ Then:
 2. Export the report as PDF (File > Download > PDF in Google Docs; File > Save As > PDF in Word; File > Export as PDF in Pages).
 3. On Google Classroom, upload the PDF, paste the repository link, and click **Turn in**.
 
-## 5.4 Clean up (after grading only)
+## 5.5 Clean up (after grading only)
 
 ```bash
 minikube stop -p emi          # stop the cluster (keeps everything)
