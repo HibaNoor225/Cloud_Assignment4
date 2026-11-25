@@ -9,6 +9,8 @@ NS="${NS:-emi}"
 DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(cd "$DIR/.." && pwd)"
 OUT="$ROOT/results/m04/autoscale"
+
+"$DIR/preflight.sh"
 mkdir -p "$OUT"
 
 echo "Applying HPA and starting from 1 replica"
@@ -29,7 +31,11 @@ now() { date '+%Y-%m-%dT%H:%M:%S'; }
 phase() {
   local name="$1" rate="$2" secs="$3"
   local start; start=$(now)
-  "$DIR/httperf_run.sh" "$rate" "$secs" "$OUT/httperf_${name}.txt"
+  if ! "$DIR/httperf_run.sh" "$rate" "$secs" "$OUT/httperf_${name}.txt"; then
+    kill -TERM "$mon"; wait "$mon" || true
+    echo "Stopping: httperf failed in phase $name" >&2
+    exit 1
+  fi
   echo "$name,$rate,$start,$(now)" >> "$OUT/phases.csv"
 }
 

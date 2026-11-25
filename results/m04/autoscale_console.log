@@ -1,0 +1,71 @@
+Pre-flight checks:
+  ok    python has psutil + matplotlib
+  ok    httperf installed
+  ok    kubectl top works (metrics-server)
+  ok    http://emi.local/health answers
+
+Applying HPA and starting from 1 replica
+horizontalpodautoscaler.autoscaling/emi-web created
+deployment.apps/emi-web scaled
+deployment "emi-web" successfully rolled out
+Waiting 60 s for the HPA to read its first metrics
+NAME      REFERENCE            TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+emi-web   Deployment/emi-web   cpu: 6%/50%   1         5         1          61s
+>>> httperf: 10 req/s for 120s (1200 requests = 120 sessions x 10 requests, 1.000 sessions/s) -> /Users/hnoor/assignment4/results/m04/autoscale/httperf_1_warmup.txt
+2026-11-25T09:54:17  emi-web Deployment/emi-web cpu: 6%/50% 1 5 1 61s
+2026-11-25T09:54:32  emi-web Deployment/emi-web cpu: 6%/50% 1 5 1 76s
+2026-11-25T09:54:47  emi-web Deployment/emi-web cpu: 14%/50% 1 5 1 91s
+2026-11-25T09:55:02  emi-web Deployment/emi-web cpu: 14%/50% 1 5 1 106s
+2026-11-25T09:55:17  emi-web Deployment/emi-web cpu: 14%/50% 1 5 1 2m1s
+2026-11-25T09:55:32  emi-web Deployment/emi-web cpu: 14%/50% 1 5 1 2m17s
+2026-11-25T09:55:48  emi-web Deployment/emi-web cpu: 25%/50% 1 5 1 2m32s
+2026-11-25T09:56:03  emi-web Deployment/emi-web cpu: 25%/50% 1 5 1 2m47s
+Request rate: 10.0 req/s (100.0 ms/req)
+Reply time [ms]: response 8.0 transfer 0.0
+Reply status: 1xx=0 2xx=1200 3xx=0 4xx=0 5xx=0
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+>>> httperf: 100 req/s for 300s (30000 requests = 3000 sessions x 10 requests, 10.000 sessions/s) -> /Users/hnoor/assignment4/results/m04/autoscale/httperf_2_peak.txt
+2026-11-25T09:56:18  emi-web Deployment/emi-web cpu: 25%/50% 1 5 1 3m2s
+2026-11-25T09:56:33  emi-web Deployment/emi-web cpu: 25%/50% 1 5 1 3m17s
+2026-11-25T09:56:48  emi-web Deployment/emi-web cpu: 48%/50% 1 5 1 3m33s
+2026-11-25T09:57:04  emi-web Deployment/emi-web cpu: 48%/50% 1 5 1 3m48s
+2026-11-25T09:57:19  emi-web Deployment/emi-web cpu: 48%/50% 1 5 1 4m3s
+2026-11-25T09:57:34  emi-web Deployment/emi-web cpu: 48%/50% 1 5 1 4m18s
+2026-11-25T09:57:49  emi-web Deployment/emi-web cpu: 79%/50% 1 5 1 4m33s
+2026-11-25T09:58:04  emi-web Deployment/emi-web cpu: 79%/50% 1 5 2 4m49s
+2026-11-25T09:58:20  emi-web Deployment/emi-web cpu: 79%/50% 1 5 2 5m4s
+2026-11-25T09:58:35  emi-web Deployment/emi-web cpu: 79%/50% 1 5 2 5m19s
+2026-11-25T09:58:50  emi-web Deployment/emi-web cpu: 54%/50% 1 5 2 5m34s
+2026-11-25T09:59:05  emi-web Deployment/emi-web cpu: 54%/50% 1 5 2 5m49s
+2026-11-25T09:59:20  emi-web Deployment/emi-web cpu: 54%/50% 1 5 2 6m5s
+2026-11-25T09:59:36  emi-web Deployment/emi-web cpu: 54%/50% 1 5 2 6m20s
+2026-11-25T09:59:51  emi-web Deployment/emi-web cpu: 49%/50% 1 5 2 6m35s
+2026-11-25T10:00:06  emi-web Deployment/emi-web cpu: 49%/50% 1 5 2 6m50s
+2026-11-25T10:00:21  emi-web Deployment/emi-web cpu: 49%/50% 1 5 2 7m5s
+2026-11-25T10:00:36  emi-web Deployment/emi-web cpu: 49%/50% 1 5 2 7m20s
+2026-11-25T10:00:51  emi-web Deployment/emi-web cpu: 44%/50% 1 5 2 7m35s
+2026-11-25T10:01:06  emi-web Deployment/emi-web cpu: 44%/50% 1 5 2 7m51s
+Request rate: 99.7 req/s (10.0 ms/req)
+Reply time [ms]: response 6.7 transfer 0.0
+Reply status: 1xx=0 2xx=30000 3xx=0 4xx=0 5xx=0
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+>>> httperf: 10 req/s for 180s (1800 requests = 180 sessions x 10 requests, 1.000 sessions/s) -> /Users/hnoor/assignment4/results/m04/autoscale/httperf_3_cooldown.txt
+2026-11-25T10:01:22  emi-web Deployment/emi-web cpu: 44%/50% 1 5 2 8m6s
+2026-11-25T10:01:37  emi-web Deployment/emi-web cpu: 44%/50% 1 5 2 8m21s
+2026-11-25T10:01:52  emi-web Deployment/emi-web cpu: 36%/50% 1 5 2 8m36s
+2026-11-25T10:02:07  emi-web Deployment/emi-web cpu: 36%/50% 1 5 2 8m51s
+2026-11-25T10:02:22  emi-web Deployment/emi-web cpu: 36%/50% 1 5 2 9m6s
+2026-11-25T10:02:37  emi-web Deployment/emi-web cpu: 36%/50% 1 5 2 9m21s
+2026-11-25T10:02:52  emi-web Deployment/emi-web cpu: 15%/50% 1 5 2 9m37s
+2026-11-25T10:03:08  emi-web Deployment/emi-web cpu: 15%/50% 1 5 2 9m52s
+2026-11-25T10:03:23  emi-web Deployment/emi-web cpu: 15%/50% 1 5 2 10m
+2026-11-25T10:03:38  emi-web Deployment/emi-web cpu: 15%/50% 1 5 2 10m
+2026-11-25T10:03:53  emi-web Deployment/emi-web cpu: 16%/50% 1 5 1 10m
+2026-11-25T10:04:08  emi-web Deployment/emi-web cpu: 16%/50% 1 5 1 10m
+Request rate: 10.0 req/s (100.0 ms/req)
+Reply time [ms]: response 7.7 transfer 0.0
+Reply status: 1xx=0 2xx=1800 3xx=0 4xx=0 5xx=0
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+NAME      REFERENCE            TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+emi-web   Deployment/emi-web   cpu: 16%/50%   1         5         1          11m
+Done. Results in /Users/hnoor/assignment4/results/m04/autoscale

@@ -14,6 +14,8 @@ REPLICAS="${REPLICAS:-1 2 3}"
 RATES="${RATES:-10 25 50 100 200}"
 DURATION="${DURATION:-60}"
 
+"$DIR/preflight.sh"
+
 mkdir -p "$OUTROOT"
 SUMMARY="$OUTROOT/summary.csv"
 [ -f "$SUMMARY" ] || echo "replicas,rate,avg_response_ms,errors,replies_2xx,run_dir" > "$SUMMARY"
@@ -29,13 +31,28 @@ for rep in $REPLICAS; do
 
   for rate in $RATES; do
     run="$OUTROOT/r${rep}_rate${rate}"
-    mkdir -p "$run"
-    kubectl get pods -n "$NS" -o wide > "$run/pods_before.txt"
 
-    python3 "$DIR/monitor.py" --out-dir "$run" &
-    mon=$!
-    "$DIR/httperf_run.sh" "$rate" "$DURATION" "$run/httperf.txt"
-    kill -TERM "$mon"; wait "$mon" || true
+    # httperf on macOS occasionally stalls at high rates; retry the run from scratch.
+    done_ok=0
+    for attempt in 1 2 3; do
+      rm -rf "$run"; mkdir -p "$run"
+      kubectl get pods -n "$NS" -o wide > "$run/pods_before.txt"
+      python3 "$DIR/monitor.py" --out-dir "$run" &
+      mon=$!
+      if "$DIR/httperf_run.sh" "$rate" "$DURATION" "$run/httperf.txt"; then
+        kill -TERM "$mon"; wait "$mon" || true
+        done_ok=1
+        break
+      fi
+      kill -TERM "$mon"; wait "$mon" || true
+      pkill -9 httperf 2>/dev/null || true
+      echo "!!! attempt $attempt failed for replicas=$rep rate=$rate, retrying in 20 s" >&2
+      sleep 20
+    done
+    if [ "$done_ok" -ne 1 ]; then
+      echo "!!! SKIPPED replicas=$rep rate=$rate after 3 failed attempts (rerun later with REPLICAS=\"$rep\" RATES=\"$rate\")" | tee -a "$OUTROOT/skipped.txt" >&2
+      continue
+    fi
 
     resp=$(sed -n 's/.*Reply time \[ms\]: response \([0-9.]*\) transfer \([0-9.]*\).*/\1 \2/p' "$run/httperf.txt")
     avg=$(echo "${resp:-0 0}" | awk '{printf "%.1f", $1 + $2}')

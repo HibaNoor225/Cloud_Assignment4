@@ -1,0 +1,30 @@
+httperf: warning: open file limit > FD_SETSIZE; limiting max. # of open files to FD_SETSIZE
+httperf --hog --timeout=5 --client=0/1 --server=emi.local --port=80 --uri=/ --rate=20 --send-buffer=4096 --recv-buffer=16384 --add-header='Content-Type: application/x-www-form-urlencoded\n' --wsesslog=1200,0.100,/var/folders/qr/4291bzxs6bd3jbt7xnz9l2zh0000gn/T/tmp.VSflaHJikv
+Maximum connect burst length: 1
+
+Total: connections 1200 requests 12000 replies 12000 test-duration 60.893 s
+
+Connection rate: 19.7 conn/s (50.7 ms/conn, <=21 concurrent connections)
+Connection time [ms]: min 932.6 avg 949.6 max 1061.7 median 950.5 stddev 11.8
+Connection time [ms]: connect 0.2
+Connection length [replies/conn]: 10.000
+
+Request rate: 197.1 req/s (5.1 ms/req)
+Request size [B]: 177.0
+
+Reply rate [replies/s]: min 181.4 avg 198.5 max 200.6 stddev 5.4 (12 samples)
+Reply time [ms]: response 4.5 transfer 0.0
+Reply size [B]: header 213.0 content 189.0 footer 0.0 (total 402.0)
+Reply status: 1xx=0 2xx=12000 3xx=0 4xx=0 5xx=0
+
+CPU time [s]: user 23.53 system 36.99 (user 38.6% system 60.8% total 99.4%)
+Net I/O: 111.5 KB/s (0.9*10^6 bps)
+
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+Errors: fd-unavail 0 addrunavail 0 ftab-full 0 other 0
+
+Session rate [sess/s]: min 16.20 avg 19.71 max 20.20 stddev 1.11 (1200/1200)
+Session: avg 1.00 connections/session
+Session lifetime [s]: 0.9
+Session failtime [s]: 0.0
+Session length histogram: 0 0 0 0 0 0 0 0 0 0 1200

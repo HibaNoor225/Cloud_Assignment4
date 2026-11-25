@@ -39,10 +39,12 @@ The PDF allows httperf or ApacheBench. **ab** sends the *same* body every time, 
 One run (`scripts/httperf_run.sh RATE SECONDS OUTFILE`) does:
 
 ```bash
-python3 scripts/gen_wsesslog.py $((RATE*SECONDS)) sessions.txt     # one random POST per entry
-httperf --hog --server emi.local --port 80 --wsesslog=TOTAL,0,sessions.txt --rate RATE --timeout 5 \
+python3 scripts/gen_wsesslog.py 1000 sessions.txt 10    # up to 1000 sessions x 10 random POSTs
+httperf --hog --server emi.local --port 80 --wsesslog=SESSIONS,0.1,sessions.txt --rate RATE/10 --timeout 5 \
         --add-header='Content-Type: application/x-www-form-urlencoded\n'
 ```
+
+httperf's **session mode**: each session opens one persistent connection and sends 10 requests on it, 0.1 s apart. Sessions start at RATE/10 per second, so the request rate is RATE (httperf reports it as `Request rate`) while new connections are 10 times fewer. Opening a new connection for every request made httperf crash or stall on macOS at 200 req/s, because every connection goes through `minikube tunnel`. Every request is still a valid random loan and writes a new document to MongoDB. Mention this method in the report.
 
 httperf's output contains the numbers we need:
 

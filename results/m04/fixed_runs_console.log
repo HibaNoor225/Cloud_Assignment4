@@ -1,0 +1,168 @@
+Pre-flight checks:
+  ok    python has psutil + matplotlib
+  ok    httperf installed
+  ok    kubectl top works (metrics-server)
+  ok    http://emi.local/health answers
+
+Removing any HPA so the replica count stays fixed
+=============== 1 replica(s) ===============
+deployment.apps/emi-web scaled
+deployment "emi-web" successfully rolled out
+>>> httperf: 10 req/s for 60s (600 requests = 60 sessions x 10 requests, 1.000 sessions/s) -> /Users/hnoor/assignment4/results/m04/fixed/r1_rate10/httperf.txt
+Request rate: 10.0 req/s (99.9 ms/req)
+Reply time [ms]: response 7.3 transfer 0.0
+Reply status: 1xx=0 2xx=600 3xx=0 4xx=0 5xx=0
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+    -> replicas=1 rate=10 avg=7.3ms errors=0
+>>> httperf: 25 req/s for 60s (1500 requests = 150 sessions x 10 requests, 2.500 sessions/s) -> /Users/hnoor/assignment4/results/m04/fixed/r1_rate25/httperf.txt
+Request rate: 24.8 req/s (40.4 ms/req)
+Reply time [ms]: response 4.5 transfer 0.0
+Reply status: 1xx=0 2xx=1500 3xx=0 4xx=0 5xx=0
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+    -> replicas=1 rate=25 avg=4.5ms errors=0
+>>> httperf: 50 req/s for 60s (3000 requests = 300 sessions x 10 requests, 5.000 sessions/s) -> /Users/hnoor/assignment4/results/m04/fixed/r1_rate50/httperf.txt
+Request rate: 49.4 req/s (20.3 ms/req)
+Reply time [ms]: response 5.7 transfer 0.0
+Reply status: 1xx=0 2xx=3000 3xx=0 4xx=0 5xx=0
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+    -> replicas=1 rate=50 avg=5.7ms errors=0
+>>> httperf: 100 req/s for 60s (6000 requests = 600 sessions x 10 requests, 10.000 sessions/s) -> /Users/hnoor/assignment4/results/m04/fixed/r1_rate100/httperf.txt
+Request rate: 98.6 req/s (10.1 ms/req)
+Reply time [ms]: response 6.2 transfer 0.0
+Reply status: 1xx=0 2xx=6000 3xx=0 4xx=0 5xx=0
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+    -> replicas=1 rate=100 avg=6.2ms errors=0
+>>> httperf: 200 req/s for 60s (12000 requests = 1200 sessions x 10 requests, 20.000 sessions/s) -> /Users/hnoor/assignment4/results/m04/fixed/r1_rate200/httperf.txt
+Request rate: 196.8 req/s (5.1 ms/req)
+Reply time [ms]: response 7.2 transfer 0.0
+Reply status: 1xx=0 2xx=12000 3xx=0 4xx=0 5xx=0
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+    -> replicas=1 rate=200 avg=7.2ms errors=0
+=============== 2 replica(s) ===============
+deployment.apps/emi-web scaled
+Waiting for deployment "emi-web" rollout to finish: 1 of 2 updated replicas are available...
+deployment "emi-web" successfully rolled out
+>>> httperf: 10 req/s for 60s (600 requests = 60 sessions x 10 requests, 1.000 sessions/s) -> /Users/hnoor/assignment4/results/m04/fixed/r2_rate10/httperf.txt
+Request rate: 10.0 req/s (100.0 ms/req)
+Reply time [ms]: response 7.8 transfer 0.0
+Reply status: 1xx=0 2xx=600 3xx=0 4xx=0 5xx=0
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+    -> replicas=2 rate=10 avg=7.8ms errors=0
+>>> httperf: 25 req/s for 60s (1500 requests = 150 sessions x 10 requests, 2.500 sessions/s) -> /Users/hnoor/assignment4/results/m04/fixed/r2_rate25/httperf.txt
+Request rate: 24.8 req/s (40.4 ms/req)
+Reply time [ms]: response 5.5 transfer 0.0
+Reply status: 1xx=0 2xx=1500 3xx=0 4xx=0 5xx=0
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+    -> replicas=2 rate=25 avg=5.5ms errors=0
+>>> httperf: 50 req/s for 60s (3000 requests = 300 sessions x 10 requests, 5.000 sessions/s) -> /Users/hnoor/assignment4/results/m04/fixed/r2_rate50/httperf.txt
+Request rate: 49.4 req/s (20.3 ms/req)
+Reply time [ms]: response 4.1 transfer 0.0
+Reply status: 1xx=0 2xx=3000 3xx=0 4xx=0 5xx=0
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+    -> replicas=2 rate=50 avg=4.1ms errors=0
+>>> httperf: 100 req/s for 60s (6000 requests = 600 sessions x 10 requests, 10.000 sessions/s) -> /Users/hnoor/assignment4/results/m04/fixed/r2_rate100/httperf.txt
+Request rate: 98.6 req/s (10.1 ms/req)
+Reply time [ms]: response 6.8 transfer 0.0
+Reply status: 1xx=0 2xx=6000 3xx=0 4xx=0 5xx=0
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+    -> replicas=2 rate=100 avg=6.8ms errors=0
+>>> httperf: 200 req/s for 60s (12000 requests = 1200 sessions x 10 requests, 20.000 sessions/s) -> /Users/hnoor/assignment4/results/m04/fixed/r2_rate200/httperf.txt
+!!! httperf still running after 105s, stopping it
+/Users/hnoor/assignment4/scripts/httperf_run.sh: line 42: 63288 Killed: 9               httperf --hog --server "$HOST" --port "${PORT:-80}" --wsesslog="$SESSIONS,$THINK,$SESS" --rate "$SESSION_RATE" --timeout 5 --add-header='Content-Type: application/x-www-form-urlencoded\n' > "$OUT" 2>&1
+!!! httperf produced no results. Its output:
+httperf: warning: open file limit > FD_SETSIZE; limiting max. # of open files to FD_SETSIZE
+Stopping: httperf failed for replicas=2 rate=200
+Pre-flight checks:
+  ok    python has psutil + matplotlib
+  ok    httperf installed
+  ok    kubectl top works (metrics-server)
+  ok    http://emi.local/health answers
+
+Removing any HPA so the replica count stays fixed
+=============== 2 replica(s) ===============
+deployment.apps/emi-web scaled
+deployment "emi-web" successfully rolled out
+>>> httperf: 200 req/s for 60s (12000 requests = 1200 sessions x 10 requests, 20.000 sessions/s) -> /Users/hnoor/assignment4/results/m04/fixed/r2_rate200/httperf.txt
+Request rate: 197.0 req/s (5.1 ms/req)
+Reply time [ms]: response 7.0 transfer 0.0
+Reply status: 1xx=0 2xx=12000 3xx=0 4xx=0 5xx=0
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+    -> replicas=2 rate=200 avg=7.0ms errors=0
+
+Done. Summary:
+replicas  rate  avg_response_ms  errors  replies_2xx  run_dir
+1         10    7.3              0       600          r1_rate10
+1         25    4.5              0       1500         r1_rate25
+1         50    5.7              0       3000         r1_rate50
+1         100   6.2              0       6000         r1_rate100
+1         200   7.2              0       12000        r1_rate200
+2         10    7.8              0       600          r2_rate10
+2         25    5.5              0       1500         r2_rate25
+2         50    4.1              0       3000         r2_rate50
+2         100   6.8              0       6000         r2_rate100
+2         200   7.0              0       12000        r2_rate200
+Pre-flight checks:
+  ok    python has psutil + matplotlib
+  ok    httperf installed
+  ok    kubectl top works (metrics-server)
+  ok    http://emi.local/health answers
+
+Removing any HPA so the replica count stays fixed
+=============== 3 replica(s) ===============
+deployment.apps/emi-web scaled
+Waiting for deployment "emi-web" rollout to finish: 2 of 3 updated replicas are available...
+deployment "emi-web" successfully rolled out
+>>> httperf: 10 req/s for 60s (600 requests = 60 sessions x 10 requests, 1.000 sessions/s) -> /Users/hnoor/assignment4/results/m04/fixed/r3_rate10/httperf.txt
+Request rate: 10.0 req/s (99.9 ms/req)
+Reply time [ms]: response 7.6 transfer 0.0
+Reply status: 1xx=0 2xx=600 3xx=0 4xx=0 5xx=0
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+    -> replicas=3 rate=10 avg=7.6ms errors=0
+>>> httperf: 25 req/s for 60s (1500 requests = 150 sessions x 10 requests, 2.500 sessions/s) -> /Users/hnoor/assignment4/results/m04/fixed/r3_rate25/httperf.txt
+Request rate: 24.8 req/s (40.4 ms/req)
+Reply time [ms]: response 4.8 transfer 0.0
+Reply status: 1xx=0 2xx=1500 3xx=0 4xx=0 5xx=0
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+    -> replicas=3 rate=25 avg=4.8ms errors=0
+>>> httperf: 50 req/s for 60s (3000 requests = 300 sessions x 10 requests, 5.000 sessions/s) -> /Users/hnoor/assignment4/results/m04/fixed/r3_rate50/httperf.txt
+Request rate: 49.4 req/s (20.3 ms/req)
+Reply time [ms]: response 4.2 transfer 0.0
+Reply status: 1xx=0 2xx=3000 3xx=0 4xx=0 5xx=0
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+    -> replicas=3 rate=50 avg=4.2ms errors=0
+>>> httperf: 100 req/s for 60s (6000 requests = 600 sessions x 10 requests, 10.000 sessions/s) -> /Users/hnoor/assignment4/results/m04/fixed/r3_rate100/httperf.txt
+Request rate: 98.6 req/s (10.1 ms/req)
+Reply time [ms]: response 6.2 transfer 0.0
+Reply status: 1xx=0 2xx=6000 3xx=0 4xx=0 5xx=0
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+    -> replicas=3 rate=100 avg=6.2ms errors=0
+>>> httperf: 200 req/s for 60s (12000 requests = 1200 sessions x 10 requests, 20.000 sessions/s) -> /Users/hnoor/assignment4/results/m04/fixed/r3_rate200/httperf.txt
+!!! httperf still running after 105s, stopping it
+/Users/hnoor/assignment4/scripts/httperf_run.sh: line 42: 63698 Killed: 9               httperf --hog --server "$HOST" --port "${PORT:-80}" --wsesslog="$SESSIONS,$THINK,$SESS" --rate "$SESSION_RATE" --timeout 5 --add-header='Content-Type: application/x-www-form-urlencoded\n' > "$OUT" 2>&1
+!!! httperf produced no results. Its output:
+httperf: warning: open file limit > FD_SETSIZE; limiting max. # of open files to FD_SETSIZE
+!!! attempt 1 failed for replicas=3 rate=200, retrying in 20 s
+>>> httperf: 200 req/s for 60s (12000 requests = 1200 sessions x 10 requests, 20.000 sessions/s) -> /Users/hnoor/assignment4/results/m04/fixed/r3_rate200/httperf.txt
+Request rate: 197.1 req/s (5.1 ms/req)
+Reply time [ms]: response 4.5 transfer 0.0
+Reply status: 1xx=0 2xx=12000 3xx=0 4xx=0 5xx=0
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+    -> replicas=3 rate=200 avg=4.5ms errors=0
+
+Done. Summary:
+replicas  rate  avg_response_ms  errors  replies_2xx  run_dir
+1         10    7.3              0       600          r1_rate10
+1         25    4.5              0       1500         r1_rate25
+1         50    5.7              0       3000         r1_rate50
+1         100   6.2              0       6000         r1_rate100
+1         200   7.2              0       12000        r1_rate200
+2         10    7.8              0       600          r2_rate10
+2         25    5.5              0       1500         r2_rate25
+2         50    4.1              0       3000         r2_rate50
+2         100   6.8              0       6000         r2_rate100
+2         200   7.0              0       12000        r2_rate200
+3         10    7.6              0       600          r3_rate10
+3         25    4.8              0       1500         r3_rate25
+3         50    4.2              0       3000         r3_rate50
+3         100   6.2              0       6000         r3_rate100
+3         200   4.5              0       12000        r3_rate200
