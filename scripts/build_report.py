@@ -13,6 +13,7 @@ import base64
 import csv
 import glob
 import html
+import io
 import os
 import re
 import shutil
@@ -20,6 +21,7 @@ import statistics
 import subprocess
 from collections import defaultdict
 from datetime import date, datetime
+from html.parser import HTMLParser
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RES = os.path.join(ROOT, "results")
@@ -751,6 +753,214 @@ h2, h3 { page-break-after: avoid; }
 """
 
 
+class DocxWriter(HTMLParser):
+    """Converts the report HTML (the small subset this script generates) into a Word document."""
+
+    def __init__(self, doc):
+        super().__init__(convert_charrefs=True)
+        self.doc = doc
+        self.para = None
+        self.fmt = []
+        self.pre = None
+        self.table = None
+        self.cell = None
+        self.link = None
+        self.pending_break = False
+
+    def _new_para(self, style=None):
+        self.para = self.doc.add_paragraph(style=style)
+        if self.pending_break:
+            self.para.paragraph_format.page_break_before = True
+            self.pending_break = False
+        return self.para
+
+    def handle_starttag(self, tag, attrs):
+        a = dict(attrs)
+        cls = a.get("class", "")
+        if tag in ("h1", "h2", "h3"):
+            self.para = self.doc.add_heading("", level={"h1": 0, "h2": 1, "h3": 2}[tag])
+            if "pb" in cls:
+                self.para.paragraph_format.page_break_before = True
+        elif tag == "p" and self.table is None:
+            self._new_para()
+            if "src" in cls:
+                self.fmt.append("small")
+            elif "formula" in cls:
+                self.para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                self.fmt.append("bold")
+            elif "red" in cls:
+                self.fmt.append("red")
+            else:
+                self.fmt.append(None)
+        elif tag == "li":
+            self._new_para("List Bullet")
+        elif tag == "div" and "missing" in cls:
+            self._new_para()
+            self.fmt.append("red")
+        elif tag == "pre":
+            self.pre = []
+        elif tag == "table":
+            self.table = []
+        elif tag == "tr" and self.table is not None:
+            self.table.append([])
+        elif tag in ("td", "th") and self.table is not None:
+            self.cell = [("", "bold" if tag == "th" else None)]
+            self.table[-1].append(self.cell)
+        elif tag == "img":
+            self._image(a.get("src", ""))
+        elif tag == "figcaption":
+            self._new_para().alignment = WD_ALIGN_PARAGRAPH.CENTER
+            self.fmt.append("caption")
+        elif tag in ("b", "strong", "th"):
+            self.fmt.append("bold")
+        elif tag in ("i", "em"):
+            self.fmt.append("italic")
+        elif tag == "code":
+            self.fmt.append("code")
+        elif tag == "sup":
+            self.fmt.append("sup")
+        elif tag == "span" and "red" in cls:
+            self.fmt.append("red")
+        elif tag == "a":
+            self.link = a.get("href")
+        elif tag == "br":
+            self._text("\n")
+
+    def handle_endtag(self, tag):
+        if tag in ("h1", "h2", "h3", "li"):
+            self.para = None
+        elif tag == "p" and self.table is None:
+            self.fmt.pop() if self.fmt else None
+            self.para = None
+        elif tag == "figcaption" or (tag == "div" and self.fmt and self.fmt[-1] == "red" and self.para is not None):
+            self.fmt.pop() if self.fmt else None
+            self.para = None
+        elif tag == "pre" and self.pre is not None:
+            p = self._new_para()
+            p.paragraph_format.space_after = Pt(6)
+            lines = "".join(self.pre).split("\n")
+            for i, line in enumerate(lines):
+                run = p.add_run(line)
+                run.font.name = "Courier New"
+                run.font.size = Pt(7.5)
+                if i < len(lines) - 1:
+                    run.add_break()
+            self.pre = None
+            self.para = None
+        elif tag in ("td", "th"):
+            self.cell = None
+        elif tag == "table" and self.table is not None:
+            self._flush_table()
+        elif tag in ("b", "strong", "i", "em", "code", "sup") or (tag == "span" and self.fmt and self.fmt[-1] == "red"):
+            if self.fmt:
+                self.fmt.pop()
+        elif tag == "a":
+            self.link = None
+
+    def handle_data(self, data):
+        if self.pre is not None:
+            self.pre.append(data)
+            return
+        data = re.sub(r"\s+", " ", data)
+        if not data.strip() and self.para is None and self.cell is None:
+            return
+        self._text(data)
+
+    def _text(self, text):
+        fmts = set(f for f in self.fmt if f)
+        if self.cell is not None:
+            self.cell.append((text, ",".join(sorted(fmts | ({"bold"} if self.cell[0][1] else set())))))
+            return
+        if self.para is None:
+            if not text.strip():
+                return
+            self._new_para()
+        run = self.para.add_run(text)
+        self._style(run, fmts)
+        if self.link:
+            run.font.color.rgb = RGBColor(0x1F, 0x4E, 0x99)
+            run.font.underline = True
+
+    @staticmethod
+    def _style(run, fmts):
+        if "bold" in fmts:
+            run.bold = True
+        if "italic" in fmts or "caption" in fmts:
+            run.italic = True
+        if "code" in fmts:
+            run.font.name = "Courier New"
+            run.font.size = Pt(9)
+        if "sup" in fmts:
+            run.font.superscript = True
+        if "small" in fmts or "caption" in fmts:
+            run.font.size = Pt(8.5)
+            run.font.color.rgb = RGBColor(0x55, 0x55, 0x55)
+        if "red" in fmts:
+            run.font.color.rgb = RGBColor(0xC0, 0x00, 0x00)
+
+    def _flush_table(self):
+        rows = [r for r in self.table if r]
+        self.table = None
+        if not rows:
+            return
+        ncols = max(len(r) for r in rows)
+        t = self.doc.add_table(rows=len(rows), cols=ncols)
+        t.style = "Table Grid"
+        for i, row in enumerate(rows):
+            for j, cell in enumerate(row):
+                p = t.cell(i, j).paragraphs[0]
+                text_runs = cell[1:]
+                for text, fmt in text_runs:
+                    run = p.add_run(text.strip() if len(text_runs) == 1 else text)
+                    run.font.size = Pt(8.5)
+                    self._style(run, set(fmt.split(",")) - {""} | ({"bold"} if cell[0][1] else set()))
+                    if "code" in fmt:
+                        run.font.size = Pt(8)
+        self.doc.add_paragraph()
+        self.para = None
+
+    def _image(self, src):
+        m = re.match(r"data:image/[^;]+;base64,(.*)", src)
+        if not m:
+            return
+        blob = base64.b64decode(m.group(1))
+        try:
+            from docx.image.image import Image as DocxImage
+            im = DocxImage.from_blob(blob)
+            tall = im.px_height > im.px_width * 1.1
+        except Exception:
+            tall = False
+        p = self._new_para()
+        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        try:
+            p.add_run().add_picture(io.BytesIO(blob), **({"height": Inches(7.0)} if tall else {"width": Inches(6.3)}))
+        except Exception:
+            p.add_run("[image could not be embedded]")
+        self.para = None
+
+
+def write_docx(doc_html, docx_path):
+    try:
+        import docx
+    except ImportError:
+        print("Word: run 'pip install python-docx' once, then run this script again to get the .docx file.")
+        return False
+    global Pt, Inches, RGBColor, WD_ALIGN_PARAGRAPH
+    from docx.enum.text import WD_ALIGN_PARAGRAPH
+    from docx.shared import Inches, Pt, RGBColor
+
+    d = docx.Document()
+    for s in d.sections:
+        s.left_margin = s.right_margin = Inches(0.8)
+        s.top_margin = s.bottom_margin = Inches(0.7)
+    d.styles["Normal"].font.name = "Calibri"
+    d.styles["Normal"].font.size = Pt(10.5)
+    body = doc_html[doc_html.find("<body>") + 6: doc_html.rfind("</body>")]
+    DocxWriter(d).feed(body)
+    d.save(docx_path)
+    return True
+
+
 def chrome():
     for p in ("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
               "/Applications/Chromium.app/Contents/MacOS/Chromium",
@@ -794,6 +1004,10 @@ def main():
     with open(html_path, "w") as f:
         f.write(doc)
     print("wrote", html_path)
+
+    docx_path = os.path.join(OUT_DIR, "Assignment4_Report.docx")
+    if write_docx(doc, docx_path):
+        print("wrote", docx_path)
 
     pdf_path = os.path.join(OUT_DIR, "Assignment4_Report.pdf")
     browser = None if args.no_pdf else chrome()
