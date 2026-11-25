@@ -1,8 +1,5 @@
 # Loan EMI Calculator with MongoDB on Kubernetes (Minikube)
 
-<<<<<<< HEAD
-**DS-584 Cloud Computing, Fall 2026, Assignment 4:** *Deploying, Load Balancing and Autoscaling a Web Application with MongoDB on Kubernetes (Minikube).*
-FCIT, University of the Punjab. Instructor: Dr. Numan Shafi.
 
 This repository contains a Loan EMI (Equated Monthly Instalment) calculator and everything needed to run it on a single-node Minikube cluster:
 
@@ -11,10 +8,6 @@ This repository contains a Loan EMI (Equated Monthly Instalment) calculator and 
 - a **3-replica web Deployment** behind a ClusterIP Service and an **NGINX Ingress** at `http://emi.local`;
 - a **HorizontalPodAutoscaler** (1–5 pods at 50% CPU);
 - load-test, profiling and graph scripts, with all raw results in `results/`.
-
-The whole system comes up on a fresh Minikube cluster with **`kubectl apply -f k8s/`** (see [Bring up the whole system](#bring-up-the-whole-system-on-a-fresh-minikube-cluster)).
-
----
 
 ## Architecture
 
@@ -168,8 +161,6 @@ Environment variables: `MONGO_URL` (required), `PORT` (default `3000`), `APP_VER
 | Node.js 20 | `brew install node` | Running the app locally (Milestone 01) |
 | httperf | `brew install httperf` | Load generator (Milestone 04) |
 | Python 3 + matplotlib, psutil | `python3 -m venv .venv && source .venv/bin/activate && pip install matplotlib psutil` | Profiling, graphs, report |
-
-On Linux, install the same tools with your package manager (`apt install httperf`, etc.).
 
 ---
 
