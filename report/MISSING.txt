@@ -1,1 +1,0 @@
-UI with the result for P=500000, 12%, 24 months and the history table  ->  results/screenshots/m01_ui_500000_12_24.png
